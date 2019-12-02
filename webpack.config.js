@@ -21,7 +21,9 @@ const commonConfig = {
             "@src": "@/src",
             "@game": "@src/game",
             "@stage": "@src/stage",
-            "@utils": "@src/utils"
+            "@utils": "@src/utils",
+            "@scene": "@src/scene",
+            "@block": "@src/block"
         }
     },
     devtool: "cheap-module-eval-source-map",
@@ -34,10 +36,7 @@ const commonConfig = {
         rules: [{
             test: /\.(jpe?g|gif|svg|png)$/,
             use: {
-                loader: "file-loader",
-                // options: {
-                //     limit: 8192
-                // }
+                loader: "file-loader"
             }
         }, {
             test: /\.css$/,

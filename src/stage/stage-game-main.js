@@ -1,5 +1,6 @@
-const { common } = require('@utils/common');
-import img_stool from '@images/stool.png';
+import scene from '@scene';
+import CuboidBlock from '@block/cuboid';
+import CylinderBlock from '@block/cylinder';
 
 export default class StageGameMain {
     constructor(callback) {
@@ -7,67 +8,39 @@ export default class StageGameMain {
     }
     init() {
         console.log(`GameMain init`);
+        this.scene = scene;
+        window.scene = this.scene;
+        this.scene.init();
+        this.addInitBlock();
         this.render();
+
+    }
+    addInitBlock() {
+        const scene = this.scene.instance;
+        let cuboid_block = new CuboidBlock(-15,0,0);
+        let cylinder_block = new CylinderBlock(23,0,0);
+
+        scene.add(cuboid_block.instance);
+        scene.add(cylinder_block.instance);
     }
     restart() {
 
     }
     render() {
-        const { width, height, canvas, scene } = common;
-        let renderer = common.renderer = new THREE.WebGLRenderer({
-            canvas
-        })
-
-        let camera = common.camera = new THREE.OrthographicCamera(width / 2, -width / 2, height / 2, -height / 2, -1000, 1000);
-
-        camera.position.x = 0;
-        camera.position.y = 0;
-        camera.position.z = 0;
-
-        camera.lookAt(new THREE.Vector3(0, 0, 1));
-
-        this.texture = new THREE.TextureLoader().load(img_stool);
-
-        renderer.setClearColor(new THREE.Color(0xffffff));
-        renderer.setSize(width, height);
-
-        let geometry1 = new THREE.TorusBufferGeometry(150, 25, 50, 100);
-        let material1 = new THREE.MeshBasicMaterial({
-            map: this.texture,
-            color: 0xfdcdcd
-        });
-        this.torus = new THREE.Mesh(geometry1, material1);
-
-        this.torus.position.x = 0;
-        this.torus.position.y = 0;
-        this.torus.position.z = 200;
-
-        this.torus.visible = false;
-
-        scene.add(this.torus);
-
-        renderer.render(scene, camera);
-
-        let animate = (dt) => {
-            requestAnimationFrame(animate);
-
-            this.torus.rotation.x += 0.01;
-            this.torus.rotation.y += 0.01;
-
-            renderer.render(scene, camera);
-        };
-
-        animate();
+        if (this.visible) {
+            this.scene.render();
+        }
+        requestAnimationFrame(this.render.bind(this))
     }
 
     show() {
         console.log(`GameMain show`);
-        this.torus.visible = true;
+        this.visible = true;
     }
 
     hide() {
         console.log(`GameNain hide`);
-        this.torus.visible = false;
+        this.visible = false;
     }
 
     restart() {

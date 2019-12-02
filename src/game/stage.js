@@ -8,7 +8,6 @@ class GameStage {
     }
 
     showGameOverStage() {
-        this.stage_game_main.hide();
         this.stage_game_over.show();
     }
 

@@ -1,5 +1,6 @@
 import GameModel from './model'
 import GameStage from './stage'
+import { STAGEGROUP } from '@utils/common';
 
 
 class GameController {
@@ -7,12 +8,11 @@ class GameController {
         this.game_model = GameModel;
         this.game_stage = GameStage;
         this.game_model.changeStage.attach((sender, args) => {
-
             switch (args.stage) {
-                case "game-over":
+                case STAGEGROUP.GAMEOVER:
                     this.game_stage.showGameOverStage();
                     break;
-                case "game-main":
+                case STAGEGROUP.GAMEMAIN:
                     this.game_stage.showGameMainStage();
                     break;
                 default:
@@ -24,18 +24,20 @@ class GameController {
     initController() {
 
         this.game_stage.initMainStage({
-           showGameOverStage:()=> this.game_model.setStage("game-over")
+           showGameOverStage:()=> this.game_model.setStage(STAGEGROUP.GAMEOVER)
         });
 
         this.game_stage.initOverStage({
-            showGameMainStage:()=> this.game_model.setStage("game-main")
+            showGameMainStage:()=> this.game_model.setStage(STAGEGROUP.GAMEMAIN)
         });
 
-        this.game_model.setStage("game-main");
+        this.game_model.setStage(STAGEGROUP.GAMEMAIN);
 
+        // setTimeout(()=>{
+        //     this.game_model.setStage(STAGEGROUP.GAMEOVER)
+        // },3000)
         
-
     }
 }
 
-export default new GameController()
+export default new GameController();

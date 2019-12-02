@@ -1,7 +1,7 @@
 export default class Event {
     constructor(sender) {
         this._sender = sender;
-        this._listeners = []
+        this._listeners = [];
     }
     attach(callback = null) {
         if (callback == null) return;
@@ -9,7 +9,7 @@ export default class Event {
     }
     notify(args) {
         this._listeners.map(item => {
-            item(this._sender, args)
+            item(this._sender, args);
         })
     }
 }

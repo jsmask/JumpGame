@@ -1,5 +1,5 @@
-const { common } = require('@utils/common');
-
+import scene from '@scene';
+import { common } from '@utils/common';
 
 export default class StageGameOver {
     constructor(callback) {
@@ -10,7 +10,7 @@ export default class StageGameOver {
         this.render();
     }
     render() {
-        let { width, height, scene, aspect } = common;
+        const { width, height } = common;
         this.canvas = document.createElement("canvas");
         this.canvas.width = width;
         this.canvas.height = height;
@@ -29,13 +29,13 @@ export default class StageGameOver {
             // side: THREE.DoubleSide
         });
 
-        this.geometry = new THREE.PlaneGeometry(width, height)
+        this.geometry = new THREE.PlaneGeometry(width, height);
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.position.z = 20
+        this.mesh.position.z = 20;
         this.mesh.visible = false;
 
         this.texture.needsUpdate = true;
-        scene.add(this.mesh);
+        scene.instance.add(this.mesh);
     }
 
     show() {
