@@ -3,6 +3,7 @@ import img_head from '@images/head.png';
 import img_bottom from '@images/bottom.png';
 import img_top from '@images/top.png';
 import { BLOCKCONFIG } from "@utils/common";
+import { custom } from "@utils/animation"
 
 class Bottle {
     constructor() {
@@ -19,7 +20,7 @@ class Bottle {
 
         this.instance = new THREE.Object3D();
         this.instance.name = this.name;
-        this.instance.position.set(this.x, this.y + this.blockHeight / 2, this.z);
+        this.instance.position.set(this.x, this.y + 30, this.z);
 
         this.instance.castShadow = true;
         this.instance.receiveShadow = true;
@@ -88,6 +89,14 @@ class Bottle {
 
     update() {
         // this.head.rotation.y += 0.1;
+    }
+
+    show() {
+        custom.to(this.instance.position, 0.3, {
+            x: BOTTLECONFIG.x,
+            y: BOTTLECONFIG.y + this.blockHeight / 2,
+            z: BOTTLECONFIG.z
+        },'Linear');
     }
 }
 

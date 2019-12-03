@@ -169,4 +169,4 @@ var Tween = {
   }
 };
 
-export default Tween
+export default Tween;

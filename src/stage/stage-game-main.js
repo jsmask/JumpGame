@@ -33,11 +33,12 @@ export default class StageGameMain {
     }
     addGrounp() {
         const scene = this.scene.instance;
-        scene.add(this.ground.instance);
+        scene.add(this.ground.instance);      
     }
     addBottle() {
         const scene = this.scene.instance;
         scene.add(this.bottle.instance);
+        this.bottle.show();
     }
     restart() {
 
