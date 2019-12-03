@@ -17,7 +17,7 @@ class Light {
         shadow_tagret.name = "shadowTarget";
 
 
-        directional_light.position.set(6, 36, 16);
+        directional_light.position.set(10, 30, 20);
         directional_light.target = shadow_tagret;
         directional_light.castShadow = true;
 

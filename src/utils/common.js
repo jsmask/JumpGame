@@ -14,3 +14,14 @@ export const BLOCKTYPE = {
     CUBOID: "cuboid",
     CYLINDER: "cylinder"
 }
+
+export const BLOCKCONFIG = {
+    width: 16,
+    height: 12
+}
+
+export const BOTTLECONFIG = {
+    x: -15,
+    y: 0,
+    z: 0
+}

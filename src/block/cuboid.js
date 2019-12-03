@@ -13,7 +13,7 @@ export default class CuboidBlock extends BaseBlock {
 
         this.texture = new THREE.TextureLoader().load(img_stool);
 
-        const material = new THREE.MeshPhongMaterial({ map: this.texture, color: 0xffffff });
+        const material = new THREE.MeshPhongMaterial({ color: 0x329ffc });
         this.instance = new THREE.Mesh(geometry, material);
         this.instance.receiveShadow = true;
         this.instance.castShadow = true;

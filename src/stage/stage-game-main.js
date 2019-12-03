@@ -2,6 +2,7 @@ import scene from '@scene';
 import CuboidBlock from '@block/cuboid';
 import CylinderBlock from '@block/cylinder';
 import ground from '@part/ground';
+import bottle from '@part/bottle';
 
 export default class StageGameMain {
     constructor(callback) {
@@ -11,10 +12,15 @@ export default class StageGameMain {
         console.log(`GameMain init`);
         this.scene = scene;
         this.ground = ground;
+        this.bottle = bottle;
+
         this.scene.init();
         this.ground.init();
+        this.bottle.init();
+
         this.addGrounp();
         this.addInitBlock();
+        this.addBottle();
         this.render();
     }
     addInitBlock() {
@@ -29,13 +35,19 @@ export default class StageGameMain {
         const scene = this.scene.instance;
         scene.add(this.ground.instance);
     }
-
+    addBottle() {
+        const scene = this.scene.instance;
+        scene.add(this.bottle.instance);
+    }
     restart() {
 
     }
     render() {
         if (this.visible) {
             this.scene.render();
+        }
+        if(this.bottle){
+            this.bottle.update();
         }
         requestAnimationFrame(this.render.bind(this))
     }
