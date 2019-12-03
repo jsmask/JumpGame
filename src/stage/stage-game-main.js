@@ -1,6 +1,7 @@
 import scene from '@scene';
 import CuboidBlock from '@block/cuboid';
 import CylinderBlock from '@block/cylinder';
+import ground from '@part/ground';
 
 export default class StageGameMain {
     constructor(callback) {
@@ -9,20 +10,26 @@ export default class StageGameMain {
     init() {
         console.log(`GameMain init`);
         this.scene = scene;
-        window.scene = this.scene;
+        this.ground = ground;
         this.scene.init();
+        this.ground.init();
+        this.addGrounp();
         this.addInitBlock();
         this.render();
-
     }
     addInitBlock() {
         const scene = this.scene.instance;
-        let cuboid_block = new CuboidBlock(-15,0,0);
-        let cylinder_block = new CylinderBlock(23,0,0);
+        let cuboid_block = new CuboidBlock(-15, 0, 0);
+        let cylinder_block = new CylinderBlock(23, 0, 0);
 
         scene.add(cuboid_block.instance);
         scene.add(cylinder_block.instance);
     }
+    addGrounp() {
+        const scene = this.scene.instance;
+        scene.add(this.ground.instance);
+    }
+
     restart() {
 
     }

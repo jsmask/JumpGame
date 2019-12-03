@@ -23,7 +23,8 @@ const commonConfig = {
             "@stage": "@src/stage",
             "@utils": "@src/utils",
             "@scene": "@src/scene",
-            "@block": "@src/block"
+            "@block": "@src/block",
+            "@part": "@src/part"
         }
     },
     devtool: "cheap-module-eval-source-map",

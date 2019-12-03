@@ -6,7 +6,7 @@ import img_stool from '@images/stool.png'
 export default class CylinderBlock extends BaseBlock {
     constructor(x = 0, y = 0, z = 0, size) {
         super(BLOCKTYPE.CYLINDER);
-        this.name = this.type;
+        this.name = "block";
         this.instance = null;
         this.size = size || this.width;
         
@@ -16,7 +16,8 @@ export default class CylinderBlock extends BaseBlock {
 
         const material = new THREE.MeshPhongMaterial({ map: this.texture, color: 0xffffff  });
         this.instance = new THREE.Mesh(geometry, material);
-
+        this.instance.receiveShadow = true;
+        this.instance.castShadow = true;
         this.x = this.instance.position.x = x;
         this.y = this.instance.position.y = y;
         this.z = this.instance.position.z = z;

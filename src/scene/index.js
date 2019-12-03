@@ -1,12 +1,14 @@
 import { common } from '@utils/common'
 import camera from './camera';
 import light from './light';
+import background from '@part/background';
 
 
 class Scene {
 
     constructor() {
         this.instance = null;
+
     }
 
     init() {
@@ -14,8 +16,11 @@ class Scene {
         this.renderer = new THREE.WebGLRenderer({
             canvas,
             antialias: true,
-            preserveDrawingBuffer: true
+            preserveDrawingBuffer: true,
+
         });
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFShadowMap;
         // this.renderer.setClearColor(new THREE.Color(0xffffff));
         this.renderer.setSize(width, height);
 
@@ -29,9 +34,9 @@ class Scene {
         this.light.init();
 
         this.axesHelper = new THREE.AxesHelper(100);
-        this.lightHelper = new THREE.DirectionalLightHelper( this.light.instances["directional_light"], 15);
+        this.lightHelper = new THREE.DirectionalLightHelper(this.light.instances["directional_light"], 15);
         this.instance.add(this.axesHelper);
-        this.instance.add(this.lightHelper);
+        // this.instance.add(this.lightHelper);
 
         this.instance.add(this.camera.instance);
 
@@ -40,6 +45,11 @@ class Scene {
                 this.instance.add(this.light.instances[key]);
             }
         }
+
+        this.background = background;
+        this.background.init();
+        this.background.instance.position.z = -84;
+        this.camera.instance.add(this.background.instance);
     }
 
     render() {
