@@ -1,9 +1,9 @@
-import { BOTTLECONFIG } from "@utils/common";
+import { BLOCKCONFIG, STATUS, BOTTLECONFIG } from "@utils/common";
 import img_head from '@images/head.png';
 import img_bottom from '@images/bottom.png';
 import img_top from '@images/top.png';
-import { BLOCKCONFIG } from "@utils/common";
 import { custom } from "@utils/animation"
+import { common } from "@utils/common";
 
 class Bottle {
     constructor() {
@@ -14,11 +14,21 @@ class Bottle {
         this.instance = null;
         this.name = "bottle";
         this.radius = 1.78;
+        this.depth = 10.24;
+        this.width = this.radius * 2;
         this.blockHeight = BLOCKCONFIG.height;
+        this.gravity = common.gravity;
+        this.flyingTime = 0;
+        this.direction = 0;
+        this.axis = null;
+        this.status = '';
+        this.reset();
+
     }
     init() {
 
         this.instance = new THREE.Object3D();
+        this.hero = new THREE.Object3D();
         this.instance.name = this.name;
         this.instance.position.set(this.x, this.y + 30, this.z);
 
@@ -32,7 +42,6 @@ class Bottle {
         this.head.castShadow = true;
 
         this.body = new THREE.Object3D();
-
 
         const bottom = this.createBottom();
         bottom.receiveShadow = true;
@@ -55,8 +64,10 @@ class Bottle {
 
         this.body.position.y = 1.8;
 
-        this.instance.add(this.head);
-        this.instance.add(this.body);
+        this.hero.add(this.head);
+        this.hero.add(this.body);
+
+        this.instance.add(this.hero);
     }
 
     createHead() {
@@ -87,16 +98,108 @@ class Bottle {
         return new THREE.Mesh(geometry, material);
     }
 
-    update() {
-        // this.head.rotation.y += 0.1;
+    show() {
+        return new Promise((resolve, reject) => {
+            custom.to(this.instance.position, 1, {
+                x: BOTTLECONFIG.x,
+                y: BOTTLECONFIG.y + this.blockHeight / 2,
+                z: BOTTLECONFIG.z,
+                ease: 'Bounce.easeOut',
+                onComplete: () => resolve()
+            });
+        })
+    }
+    setDirection(direction, axis) {
+        this.direction = direction;
+        this.axis = axis;
+    }
+    rotate() {
+        const scale = 1.35;
+        this.hero.rotation.z = this.hero.rotation.x = 0;
+        if (this.direction == 0) { // x
+            custom.to(this.hero.rotation, 0.14, { z: this.hero.rotation.z - Math.PI })
+            custom.to(this.hero.rotation, 0.18, { z: this.hero.rotation.z - 2 * Math.PI, delay: 0.14 })
+            custom.to(this.head.position, 0.1, { y: this.head.position.y + 0.9 * scale, x: this.head.position.x + 0.45 * scale })
+            custom.to(this.head.position, 0.1, { y: this.head.position.y - 0.9 * scale, x: this.head.position.x - 0.45 * scale, delay: 0.1 })
+            custom.to(this.head.position, 0.15, { y: 10.24, x: 0, delay: 0.25 })
+            custom.to(this.body.scale, 0.1, { y: Math.max(scale, 1), x: Math.max(Math.min(1 / scale, 1), 0.7), z: Math.max(Math.min(1 / scale, 1), 0.7) })
+            custom.to(this.body.scale, 0.1, { y: Math.min(0.9 / scale, 0.7), x: Math.max(scale, 1.2), z: Math.max(scale, 1.2), delay: 0.1 })
+            custom.to(this.body.scale, 0.3, { y: 1, x: 1, z: 1, delay: 0.2 })
+        } else if (this.direction == 1) { // z
+            custom.to(this.hero.rotation, 0.14, { x: this.hero.rotation.x - Math.PI })
+            custom.to(this.hero.rotation, 0.18, { x: this.hero.rotation.x - 2 * Math.PI, delay: 0.14 })
+            custom.to(this.head.position, 0.1, { y: this.head.position.y + 0.9 * scale, z: this.head.position.z - 0.45 * scale })
+            custom.to(this.head.position, 0.1, { z: this.head.position.z + 0.45 * scale, y: this.head.position.y - 0.9 * scale, delay: 0.1 })
+            custom.to(this.head.position, 0.15, { y: 10.24, z: 0, delay: 0.25 })
+            custom.to(this.body.scale, 0.05, { y: Math.max(scale, 1), x: Math.max(Math.min(1 / scale, 1), 0.7), z: Math.max(Math.min(1 / scale, 1), 0.7) })
+            custom.to(this.body.scale, 0.05, { y: Math.min(0.9 / scale, 0.7), x: Math.max(scale, 1.2), z: Math.max(scale, 1.2), delay: 0.1 })
+            custom.to(this.body.scale, 0.2, { y: 1, x: 1, z: 1, delay: 0.2 })
+        }
+    }
+    reset() {
+        this.stop();
+        this.instance&&this.instance.position.set(this.x, this.y + 30, this.z);
+    }
+    shrink() {
+        this.status = STATUS.SKRINK;
+    }
+    jump() {
+        this.status = STATUS.JUMP;
+    }
+    stop() {
+        this.status = STATUS.STOP;
+        this.velocity = {
+            vx: 0,
+            vy: 0
+        }
+        this.flyingTime = 0;
+        this.scale = 1;
+        if (this.instance) {
+            this.body.scale.x = this.scale;
+            this.body.scale.y = this.scale;
+            this.body.scale.z = this.scale;
+            this.head.position.y = 10.24;
+            this.hero.position.y = 0;
+        }
     }
 
-    show() {
-        custom.to(this.instance.position, 0.3, {
-            x: BOTTLECONFIG.x,
-            y: BOTTLECONFIG.y + this.blockHeight / 2,
-            z: BOTTLECONFIG.z
-        },'Linear');
+    _shrink() {
+        const DELTA_SCALE = 0.005;
+        const HORIZON_DELTA_SCALE = 0.002;
+        const HEAD_DELTA = 0.03;
+        const MIN_SCALE = 0.55;
+        this.scale -= DELTA_SCALE;
+        this.scale = Math.max(MIN_SCALE, this.scale);
+        if (this.scale <= MIN_SCALE) {
+            return;
+        }
+        this.body.scale.y = this.scale;
+        this.body.scale.x += HORIZON_DELTA_SCALE;
+        this.body.scale.z += HORIZON_DELTA_SCALE;
+        this.head.position.y -= HEAD_DELTA;
+        const bottleDeltaY = HEAD_DELTA / 2;
+        const deltaY = this.blockHeight * DELTA_SCALE / 2;
+        this.hero.position.y -= (bottleDeltaY + deltaY * 2);
+    }
+
+    _jump(tickTime) {
+        const t = tickTime / 1000;
+        this.flyingTime = this.flyingTime + t;
+        const translateH = this.velocity.vx * t;
+        const translateY = this.velocity.vy * t - 0.5 * this.gravity * t * t - this.gravity * this.flyingTime * t;
+        this.instance.translateY(translateY);
+        this.instance.translateOnAxis(this.axis, translateH);
+    }
+
+    update() {
+        if (this.status === STATUS.SKRINK) {
+            this._shrink()
+        } else if (this.status === STATUS.JUMP) {
+            const tickTime = Date.now() - this.lastFrameTime;
+            this._jump(tickTime);
+        }
+        this.lastFrameTime = Date.now();
+        // this.head.rotation.y += 0.1;
     }
 }
 

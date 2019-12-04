@@ -1,38 +1,45 @@
 
+import { custom } from '@utils/animation';
 
 class Light {
     constructor() {
         this.instances = {};
     }
     init() {
-        const ambient_light = new THREE.AmbientLight(0xffffff, 0.8);
-        const directional_light = new THREE.DirectionalLight(0xffffff, 0.3);
-
-        const shadow_geometry = new THREE.PlaneBufferGeometry(0.1, 0.1);
-        const shadow_material = new THREE.MeshBasicMaterial({
-            color: 0x000000
-        });
-        const shadow_tagret = new THREE.Mesh(shadow_geometry, shadow_material);
-        shadow_tagret.visible = false;
-        shadow_tagret.name = "shadowTarget";
-
-
-        directional_light.position.set(10, 30, 20);
-        directional_light.target = shadow_tagret;
-        directional_light.castShadow = true;
-
-        directional_light.shadow.camera.near = 0.5;
-        directional_light.shadow.camera.far = 500;
-        directional_light.shadow.camera.left = -100;
-        directional_light.shadow.camera.right = 100;
-        directional_light.shadow.camera.bottom = -100;
-        directional_light.shadow.camera.top = 100;
-        directional_light.shadow.mapSize.width = 1024;
-        directional_light.shadow.mapSize.height = 1024;
-
-        this.instances.ambient_light = ambient_light;
-        this.instances.directional_light = directional_light;
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        const shadowLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        this.shadowLight = shadowLight;
+        const shadowLightHelper = new THREE.DirectionalLightHelper(shadowLight, 5);
+        shadowLight.position.set(10, 30, 20);;
+        shadowLight.castShadow = true;
+        var basicMaterial = new THREE.MeshBasicMaterial({ color: 0xF5F5F5 });;
+        this.shadowTarget = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.1), basicMaterial);
+        this.shadowTarget.visible = false;
+        this.shadowTarget.name = 'shadowTarget';
+        shadowLight.target = this.shadowTarget;
+        shadowLight.shadow.camera.near = 0.5;
+        shadowLight.shadow.camera.far = 500;
+        shadowLight.shadow.camera.left = -100;
+        shadowLight.shadow.camera.right = 100;
+        shadowLight.shadow.camera.top = 100;
+        shadowLight.shadow.camera.bottom = -100;
+        shadowLight.shadow.mapSize.width = 1024;
+        shadowLight.shadow.mapSize.height = 1024;
+        this.instances.shadowLight = shadowLight;
+        this.instances.ambientLight = ambientLight;
+        this.instances.shadowTarget = this.shadowTarget;
+        this.instances.shadowLightHelper = shadowLightHelper;
     }
+
+    updatePosition (targetPosition) {
+        custom.to(this.shadowTarget.position, 0.5, {x: targetPosition.x, y: targetPosition.y, z: targetPosition.z});
+        custom.to(this.shadowLight.position, 0.5, {x: 10 + targetPosition.x, y: 30 + targetPosition.y, z: 20 + targetPosition.z});
+      }
+    
+      reset () {
+        this.shadowLight.position.set(10, 30, 20);
+        this.shadowTarget.position.set(0, 0, 0);
+      }
 }
 
 export default new Light();

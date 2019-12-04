@@ -24,11 +24,11 @@ class GameController {
     initController() {
 
         this.game_stage.initMainStage({
-           showGameOverStage:()=> this.game_model.setStage(STAGEGROUP.GAMEOVER)
+            showGameOverStage: () => this.game_model.setStage(STAGEGROUP.GAMEOVER)
         });
 
         this.game_stage.initOverStage({
-            showGameMainStage:()=> this.game_model.setStage(STAGEGROUP.GAMEMAIN)
+            restartGame: () => this.game_stage.restartGame()
         });
 
         this.game_model.setStage(STAGEGROUP.GAMEMAIN);
@@ -36,7 +36,7 @@ class GameController {
         // setTimeout(()=>{
         //     this.game_model.setStage(STAGEGROUP.GAMEOVER)
         // },3000)
-        
+
     }
 }
 

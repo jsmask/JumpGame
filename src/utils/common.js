@@ -2,7 +2,8 @@ export const common = {
     canvas: null,
     width: 300,
     height: 300,
-    aspect: 1
+    aspect: 1,
+    gravity: 700
 }
 
 export const STAGEGROUP = {
@@ -23,5 +24,13 @@ export const BLOCKCONFIG = {
 export const BOTTLECONFIG = {
     x: -15,
     y: 0,
-    z: 0
+    z: 0,
 }
+
+export const STATUS = {
+    "STOP": "stop",
+    "SKRINK": "shrink",
+    "JUMP": "jump",
+}
+
+export const COLOR = [0x329ffc, 0x9fcf1f, 0xf44f3c, 0xe2ef7c]

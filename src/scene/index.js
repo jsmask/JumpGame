@@ -34,9 +34,7 @@ class Scene {
         this.light.init();
 
         this.axesHelper = new THREE.AxesHelper(100);
-        this.lightHelper = new THREE.DirectionalLightHelper(this.light.instances["directional_light"], 15);
         this.instance.add(this.axesHelper);
-        // this.instance.add(this.lightHelper);
 
         this.instance.add(this.camera.instance);
 
@@ -54,6 +52,17 @@ class Scene {
 
     render() {
         this.renderer.render(this.instance, this.camera.instance);
+    }
+
+    updateCameraPosition(targetPosition) {
+        this.camera.updatePosition(targetPosition);
+        this.light.updatePosition(targetPosition);
+    }
+
+
+    reset() {
+        this.camera.reset()
+        this.light.reset()
     }
 
 }

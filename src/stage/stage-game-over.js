@@ -10,7 +10,13 @@ export default class StageGameOver {
         this.render();
     }
     render() {
-        const { width, height } = common;
+        const { width, height, aspect } = common;
+        this.region = [
+            (width - 200) / 2,
+            (width - 200) / 2 + 200,
+            (height - 100) / 2,
+            (height - 100) / 2 + 100
+        ]
         this.canvas = document.createElement("canvas");
         this.canvas.width = width;
         this.canvas.height = height;
@@ -29,23 +35,45 @@ export default class StageGameOver {
             // side: THREE.DoubleSide
         });
 
-        this.geometry = new THREE.PlaneGeometry(width, height);
+        this.geometry = new THREE.PlaneGeometry(60, 60 * aspect);
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.z = 20;
         this.mesh.visible = false;
 
         this.texture.needsUpdate = true;
-        scene.instance.add(this.mesh);
+        scene.camera.instance.add(this.mesh);
     }
 
     show() {
         console.log(`GameOver show`);
         this.mesh.visible = true;
+        this.bindTouchEvent();
     }
 
     hide() {
         console.log(`GameOver hide`);
         this.mesh.visible = false;
+        this.removeTouchEvent();
+        console.log('------------')
+    }
+
+    onTouchEnd(e) {
+        if(!this.mesh.visible) return;
+        const pageX = e.changedTouches[0].pageX;
+        const pageY = e.changedTouches[0].pageY;
+        if (pageX > this.region[0] && pageX < this.region[1] && pageY > this.region[2] && pageY < this.region[3]) {
+            this.callback.restartGame();
+        }
+    }
+
+    bindTouchEvent() {
+        const { canvas } = common;
+        canvas.addEventListener('touchend', this.onTouchEnd.bind(this))
+    }
+
+    removeTouchEvent() {
+        const { canvas } = common;
+        canvas.removeEventListener('touchend', this.onTouchEnd.bind(this))
     }
 
 }

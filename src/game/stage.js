@@ -14,11 +14,12 @@ class GameStage {
     showGameMainStage(){
         this.stage_game_main.show();
         this.stage_game_over.hide();
-        this.stage_game_main.restart();
     }
 
     restartGame() {
-
+        this.stage_game_main.show();
+        this.stage_game_over.hide();
+        this.stage_game_main.restart();
     }
 
     initMainStage(callback) {
