@@ -199,7 +199,6 @@ class Bottle {
             this._jump(tickTime);
         }
         this.lastFrameTime = Date.now();
-        // this.head.rotation.y += 0.1;
     }
 }
 

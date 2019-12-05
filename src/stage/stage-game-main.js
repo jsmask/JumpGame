@@ -22,12 +22,9 @@ export default class StageGameMain {
         this.ground = ground;
         this.bottle = bottle;
         this.gravity = common.gravity;
-        this.scoreText = new ScoreText()
+        this.scoreText = new ScoreText();
 
-        this.scoreText.init({
-            fillStyle: 0x666666
-        })
-
+        this.scoreText.init();
         this.scene.init();
         this.ground.init();
         this.bottle.init();

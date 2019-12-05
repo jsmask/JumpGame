@@ -7,11 +7,15 @@ class GameStage {
 
     }
 
+    getScore() {
+        return this.stage_game_main.score;
+    }
+
     showGameOverStage() {
         this.stage_game_over.show();
     }
 
-    showGameMainStage(){
+    showGameMainStage() {
         this.stage_game_main.show();
         this.stage_game_over.hide();
     }

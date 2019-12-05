@@ -7,6 +7,7 @@ export default class StageGameOver {
         this.callback = callback;
         const { canvas } = common;
         this.canvas = canvas;
+        this.score = 0;
     }
     init() {
         console.log(`GameOver init`);
@@ -55,6 +56,7 @@ export default class StageGameOver {
     show() {
         console.log(`GameOver show`);
         this.mesh.visible = true;
+        this.score = this.callback.getScore();
         this.addTouchEvent();
     }
 
@@ -75,11 +77,11 @@ export default class StageGameOver {
     }
 
     addTouchEvent = e => {
-        this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this),true)
+        this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this), true)
     }
 
     removeTouchEvent = e => {
-        this.canvas.removeEventListener('touchend', this.onTouchEnd.bind(this),true)
+        this.canvas.removeEventListener('touchend', this.onTouchEnd.bind(this), true)
     }
 
 }

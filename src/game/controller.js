@@ -28,7 +28,8 @@ class GameController {
         });
 
         this.game_stage.initOverStage({
-            restartGame: () => this.game_stage.restartGame()
+            restartGame: () => this.game_stage.restartGame(),
+            getScore: () => this.game_stage.getScore()
         });
 
         this.game_model.setStage(STAGEGROUP.GAMEMAIN);
