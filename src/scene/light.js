@@ -28,7 +28,7 @@ class Light {
         this.instances.shadowLight = shadowLight;
         this.instances.ambientLight = ambientLight;
         this.instances.shadowTarget = this.shadowTarget;
-        this.instances.shadowLightHelper = shadowLightHelper;
+        // this.instances.shadowLightHelper = shadowLightHelper;
     }
 
     updatePosition (targetPosition) {

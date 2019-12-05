@@ -34,7 +34,7 @@ class Scene {
         this.light.init();
 
         this.axesHelper = new THREE.AxesHelper(100);
-        this.instance.add(this.axesHelper);
+        // this.instance.add(this.axesHelper);
 
         this.instance.add(this.camera.instance);
 
@@ -64,6 +64,21 @@ class Scene {
         this.camera.reset()
         this.light.reset()
     }
+
+    addScore (scoreInstance) {
+        this.currentScore = scoreInstance;
+        this.camera.instance.add(scoreInstance);
+        scoreInstance.position.x = -24;
+        scoreInstance.position.y = 42;
+      }
+    
+      updateScore (scoreInstance) {
+        this.camera.instance.remove(this.currentScore);
+        this.currentScore = scoreInstance;
+        this.camera.instance.add(scoreInstance);
+        scoreInstance.position.x = -24;
+        scoreInstance.position.y = 42;
+      }
 
 }
 

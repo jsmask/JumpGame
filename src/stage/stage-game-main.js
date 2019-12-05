@@ -5,6 +5,7 @@ import ground from '@part/ground';
 import bottle from '@part/bottle';
 import { common, BLOCKCONFIG, BLOCKTYPE } from '@utils/common';
 import utils from '@utils'
+import ScoreText from '@part/scoreText'
 
 
 
@@ -14,10 +15,18 @@ export default class StageGameMain {
     }
     init() {
         console.log(`GameMain init`);
+        const { canvas } = common;
+        this.canvas = canvas;
+        this.score = 0;
         this.scene = scene;
         this.ground = ground;
         this.bottle = bottle;
         this.gravity = common.gravity;
+        this.scoreText = new ScoreText()
+
+        this.scoreText.init({
+            fillStyle: 0x666666
+        })
 
         this.scene.init();
         this.ground.init();
@@ -26,24 +35,26 @@ export default class StageGameMain {
         this.addGround();
         this.addInitBlock();
         this.addBottle();
-
+        this.addScore();
         this.render();
     }
     restart() {
-        console.log('restart Game')
-        this.deleteObjectsFromScene()
-        this.scene.reset()
-        this.bottle.reset()
+        console.log('restart Game');
+        this.score = 0;
+        this.deleteObjectsFromScene();
+        this.scene.reset();
+        this.bottle.reset();
         this.ground.reset();
-        // this.updateScore(0)
+        this.updateScore(0);
         this.addInitBlock();
         this.addGround();
         this.addBottle();
+        this.state = '';
     }
     addInitBlock() {
         const scene = this.scene.instance;
         this.currentBlock = new CuboidBlock(-15, 0, 0);
-        this.nextBlock = new CylinderBlock(23, 0, 0);
+        this.nextBlock = new CylinderBlock(18 + (Math.random() * 5), 0, 0);
 
         scene.add(this.currentBlock.instance);
         scene.add(this.nextBlock.instance);
@@ -51,6 +62,13 @@ export default class StageGameMain {
         const initDirection = 0;
         this.targetPosition = this.nextBlock.instance.position;
         this.setDirection(initDirection);
+    }
+    addScore() {
+        this.scene.addScore(this.scoreText.instance)
+    }
+    updateScore(score) {
+        this.scoreText.updateScore(score);
+        this.scene.updateScore(this.scoreText.instance);
     }
     addGround() {
         const scene = this.scene.instance;
@@ -62,31 +80,32 @@ export default class StageGameMain {
         this.bottle.show().then(() => {
             this.addTouchEvent();
             this.state = 'stop';
-            console.log('show end')
+            console.log('show end');
         });
     }
     addTouchEvent() {
-        const { canvas } = common;
-        canvas.addEventListener("touchstart", this.onTouchStart.bind(this));
-        canvas.addEventListener("touchend", this.onTouchEnd.bind(this));
+        this.canvas.addEventListener("touchstart", this.onTouchStart, false);
+        this.canvas.addEventListener("touchend", this.onTouchEnd, false);
     }
     removeTouchEvent() {
-        const { canvas } = common;
-        canvas.removeEventListener("touchstart", this.onTouchStart.bind(this));
-        canvas.removeEventListener("touchend", this.onTouchEnd.bind(this));
+        this.canvas.removeEventListener("touchstart", this.onTouchStart, false);
+        this.canvas.removeEventListener("touchend", this.onTouchEnd, false);
     }
-    onTouchStart() {
-        if (this.state !== 'stop') return;
+    onTouchStart = e => {
         console.log('touch start');
+        if (this.state !== 'stop') return;
         this.touchStartTime = Date.now();
+
         this.bottle.shrink();
         this.currentBlock.shrink();
     }
-    onTouchEnd() {
+    onTouchEnd = e => {
+        console.log('touch end');
         if (this.state !== 'stop') return;
-        console.log("touch end");
+        if (this.touchStartTime === 0) return;
         this.touchEndTime = Date.now();
         const duration = this.touchEndTime - this.touchStartTime;
+        this.touchStartTime = 0;
         this.bottle.velocity.vx = Math.min(duration / 6, 400);
         this.bottle.velocity.vx = +this.bottle.velocity.vx.toFixed(2);
         this.bottle.velocity.vy = Math.min(150 + duration / 20, 400);
@@ -154,17 +173,17 @@ export default class StageGameMain {
     checkBottleHit() {
         if (this.checkingHit && this.bottle.instance.position.y <= BLOCKCONFIG.height / 2 + 0.1 && this.bottle.status === 'jump' && this.bottle.flyingTime > 0.3) {
             this.checkingHit = false;
-            
+
             if (this.hit === 1 || this.hit === 7 || this.hit === 2) {
                 this.state = 'stop';
                 this.bottle.stop();
                 this.bottle.instance.position.y = BLOCKCONFIG.height / 2;
                 this.bottle.instance.position.x = this.bottle.destination[0];
                 this.bottle.instance.position.z = this.bottle.destination[1];
-                if(this.hit!==2){
-                    //this.updateScore(++this.score)
-                    this.updateNextBlock()
-                }     
+                if (this.hit !== 2) {
+                    this.updateScore(++this.score);
+                    this.updateNextBlock();
+                }
             } else {
                 this.state = 'over';
                 this.removeTouchEvent();
@@ -219,31 +238,32 @@ export default class StageGameMain {
         const type = seed ? 'cuboid' : 'cylinder'
         const direction = Math.round(Math.random()) // 0 -> x 1 -> z
         const width = Math.round(Math.random() * 6) + 10;
-        const distance = Math.round(Math.random() * 20) + 25;
+        const distance = Math.round(Math.random() * 25) + 20;
         this.currentBlock = this.nextBlock
         const targetPosition = this.targetPosition = {}
-        if (direction == 0) { // x
+        if (direction === 0) {
             targetPosition.x = this.currentBlock.instance.position.x + distance
             targetPosition.y = this.currentBlock.instance.position.y
             targetPosition.z = this.currentBlock.instance.position.z
-        } else if (direction == 1) { // z
+        }
+        if (direction === 1) {
             targetPosition.x = this.currentBlock.instance.position.x
             targetPosition.y = this.currentBlock.instance.position.y
             targetPosition.z = this.currentBlock.instance.position.z - distance
         }
         this.setDirection(direction)
         if (type === BLOCKTYPE.CUBOID) {
-            this.nextBlock = new CuboidBlock(targetPosition.x, targetPosition.y, targetPosition.z, 'popup', width)
+            this.nextBlock = new CuboidBlock(targetPosition.x, targetPosition.y, targetPosition.z, 'popup', width);
         } else if (type === BLOCKTYPE.CYLINDER) {
-            this.nextBlock = new CylinderBlock(targetPosition.x, targetPosition.y, targetPosition.z, 'popup', width)
+            this.nextBlock = new CylinderBlock(targetPosition.x, targetPosition.y, targetPosition.z, 'popup', width);
         }
-        this.scene.instance.add(this.nextBlock.instance)
+        this.scene.instance.add(this.nextBlock.instance);
         const cameraTargetPosition = {
             x: (this.currentBlock.instance.position.x + this.nextBlock.instance.position.x) / 2,
             y: (this.currentBlock.instance.position.y + this.nextBlock.instance.position.y) / 2,
             z: (this.currentBlock.instance.position.z + this.nextBlock.instance.position.z) / 2,
         }
-        this.scene.updateCameraPosition(cameraTargetPosition)
-        this.ground.updatePosition(cameraTargetPosition)
+        this.scene.updateCameraPosition(cameraTargetPosition);
+        this.ground.updatePosition(cameraTargetPosition);
     }
 }

@@ -33,4 +33,4 @@ export const STATUS = {
     "JUMP": "jump",
 }
 
-export const COLOR = [0x329ffc, 0x9fcf1f, 0xf44f3c, 0xe2ef7c]
+export const COLOR = [0x329ffc, 0x9fcf1f, 0xf44f3c, 0xffcf00]
