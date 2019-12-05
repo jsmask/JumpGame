@@ -7,8 +7,16 @@ import { common, BLOCKCONFIG, BLOCKTYPE } from '@utils/common';
 import utils from '@utils'
 import ScoreText from '@part/scoreText'
 import audiomanager from '../audiomanager';
+import { stopAllAnimation } from '@utils/animation';
+import { BOTTLECONFIG } from '@utils/common';
 
-
+const HIT_NEXT_BLOCK_NORMAL = 1;
+const HIT_BLOCK_CURRENT = 2;
+const GAME_OVER_NEXT_BLOCK_FRONT = 3;
+const GAME_OVER_CURRENT_BLOCK_BACK = 4;
+const GAME_OVER_NEXT_BLOCK_BACK = 5;
+const GAME_OVER_BOTH = 6;
+const HIT_NEXT_BLOCK_CENTER = 7;
 
 export default class StageGameMain {
     constructor(callback) {
@@ -24,18 +32,22 @@ export default class StageGameMain {
         this.bottle = bottle;
         this.gravity = common.gravity;
         this.scoreText = new ScoreText();
-        
+
 
         this.scoreText.init();
         this.scene.init();
         this.ground.init();
         this.bottle.init();
 
-        audiomanager.init();
+        audiomanager
+            .init()
+            .then(() => {
+                this.addBottle();
+            });
 
         this.addGround();
         this.addInitBlock();
-        this.addBottle();
+
         this.addScore();
         this.render();
     }
@@ -50,7 +62,7 @@ export default class StageGameMain {
         this.updateScore(0);
         this.addInitBlock();
         this.addGround();
-        this.addBottle(); 
+        this.addBottle();
     }
     addInitBlock() {
         const scene = this.scene.instance;
@@ -79,11 +91,10 @@ export default class StageGameMain {
         const scene = this.scene.instance;
         audiomanager.startPlay();
         scene.add(this.bottle.instance);
-        this.bottle.show().then(() => {  
+        this.bottle.show().then(() => {
             this.addTouchEvent();
             this.state = 'stop';
             console.log('show end');
-            
         });
     }
     addTouchEvent() {
@@ -119,7 +130,7 @@ export default class StageGameMain {
         this.checkingHit = true
         this.currentBlock.rebound();
         this.bottle.rotate();
-        this.bottle.jump();        
+        this.bottle.jump();
     }
 
     setDirection(direction) {
@@ -178,20 +189,44 @@ export default class StageGameMain {
         if (this.checkingHit && this.bottle.instance.position.y <= BLOCKCONFIG.height / 2 + 0.1 && this.bottle.status === 'jump' && this.bottle.flyingTime > 0.3) {
             this.checkingHit = false;
 
-            if (this.hit === 1 || this.hit === 7 || this.hit === 2) {
+            if (this.hit === HIT_NEXT_BLOCK_NORMAL || this.hit === HIT_NEXT_BLOCK_CENTER) {
                 this.state = 'stop';
                 this.bottle.stop();
                 this.bottle.instance.position.y = BLOCKCONFIG.height / 2;
                 this.bottle.instance.position.x = this.bottle.destination[0];
                 this.bottle.instance.position.z = this.bottle.destination[1];
-                if (this.hit !== 2) {
-                    this.updateScore(++this.score);
-                    this.updateNextBlock();
+                this.updateScore(++this.score);
+                this.updateNextBlock();
+            } else if (this.hit === HIT_BLOCK_CURRENT) {
+                this.state = 'stop';
+                this.bottle.stop();
+                this.bottle.instance.position.y = BLOCKCONFIG.height / 2;
+                this.bottle.instance.position.x = this.bottle.destination[0];
+                this.bottle.instance.position.z = this.bottle.destination[1];
+            }
+            else {
+                if (this.hit === GAME_OVER_CURRENT_BLOCK_BACK || this.hit === GAME_OVER_NEXT_BLOCK_BACK) {
+                    stopAllAnimation();
+                    this.bottle.stop();
+                    this.bottle.forerake();
+                    audiomanager.fallBlockPlay();
                 }
-            } else {
+                else if (this.hit === GAME_OVER_NEXT_BLOCK_FRONT) {
+                    stopAllAnimation();
+                    this.bottle.stop();
+                    this.bottle.hypsokinesis();
+                    audiomanager.fallBlockPlay();
+                } else {
+                    stopAllAnimation();
+                    this.bottle.stop();
+                    this.bottle.fall();
+                    audiomanager.fallPlanePlay();
+                }
                 this.state = 'over';
                 this.removeTouchEvent();
-                this.callback.showGameOverStage();
+                setTimeout(() => {
+                    this.callback.showGameOverStage();
+                }, 2000);
             }
         }
     }
@@ -216,23 +251,23 @@ export default class StageGameMain {
             let nextPolygon = nextBlock.getVertices();
             if (utils.pointInPolygon(destination, nextPolygon)) {
                 if (Math.abs(nextDiff) < 5) {
-                    return 1;
+                    return HIT_NEXT_BLOCK_NORMAL;
                 } else {
-                    return 7;
+                    return HIT_NEXT_BLOCK_CENTER;
                 }
-            } else if (utils.pointInPolygon([destination[0] - this.bottle.width / 2, destination[1]], nextPolygon) || utils.pointInPolygon([destination[0], destination[1] + this.bottle.depth], nextPolygon)) {
-                result1 = 5;
-            } else if (utils.pointInPolygon([destination[0], destination[1] - this.bottle.depth], nextPolygon) || utils.pointInPolygon([destination[0] + this.bottle.depth, destination[1]], nextPolygon)) {
-                result1 = 3;
+            } else if (utils.pointInPolygon([destination[0] - this.bottle.width, destination[1]], nextPolygon) || utils.pointInPolygon([destination[0], destination[1] + this.bottle.depth / 2], nextPolygon)) {
+                result1 = GAME_OVER_NEXT_BLOCK_BACK;
+            } else if (utils.pointInPolygon([destination[0], destination[1] - this.bottle.depth / 2], nextPolygon) || utils.pointInPolygon([destination[0] + this.bottle.depth / 2, destination[1]], nextPolygon)) {
+                result1 = GAME_OVER_NEXT_BLOCK_FRONT;
             }
         }
 
         let currentPolygon = currentBlock.getVertices();
         if (utils.pointInPolygon(destination, currentPolygon)) {
-            return 2;
+            return HIT_BLOCK_CURRENT;
         } else if (utils.pointInPolygon([destination[0], destination[1] + this.bottle.depth], currentPolygon) || utils.pointInPolygon([destination[0] - this.bottle.width / 2, destination[1]], currentPolygon)) {
-            if (result1) return 6;
-            return 4;
+            if (result1) return GAME_OVER_BOTH;
+            return GAME_OVER_CURRENT_BLOCK_BACK;
         }
         return result1 || result2 || 0;
     }

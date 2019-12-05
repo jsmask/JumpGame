@@ -2,9 +2,9 @@ import Tween from './tween'
 var animationId = -1
 var killAnimationId = animationId - 1
 
+var _customAnimation = {};
 
-var customAnimation = {};
-customAnimation.to = function (obj, duration, options) {
+_customAnimation.to = function (obj, duration, options) {
     duration *= 1000;
     var delay = options.delay || 0;
     for (var name in options) {
@@ -13,7 +13,6 @@ customAnimation.to = function (obj, duration, options) {
         } else if (name === 'onComplete') { } else if (name === 'ease') { } else {
             setTimeout(function (name) {
                 return function () {
-                    //console.log("name", name, obj[name], options[name], duration, delay, obj)
                     TweenAnimation(obj[name], options[name], duration, options.ease || 'Linear', function (value, complete) {
                         obj[name] = value;
                         if (complete) {
@@ -26,8 +25,9 @@ customAnimation.to = function (obj, duration, options) {
     }
 }
 
+
 // 对运动方法进行封装
-var TweenAnimation = function TweenAnimation(from, to, duration, easing, callback) {
+var _TweenAnimation = function TweenAnimation(from, to, duration, easing, callback) {
     var selfAnimationId = ++animationId;
     var isUndefined = function isUndefined(obj) {
         return typeof obj == 'undefined';
@@ -170,9 +170,10 @@ var TweenAnimation = function TweenAnimation(from, to, duration, easing, callbac
     step();
 };
 
-TweenAnimation.killAll = function () {
+var _stopAllAnimation = () => {
     killAnimationId = animationId;
-};
+}
 
-export const tween = TweenAnimation;
-export const custom = customAnimation;
+export const customAnimation = _customAnimation;
+export const TweenAnimation = _TweenAnimation;
+export const stopAllAnimation = _stopAllAnimation;

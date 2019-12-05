@@ -1,5 +1,5 @@
 import { BLOCKCONFIG,STATUS } from "@utils/common";
-import { custom } from '@utils/animation';
+import { customAnimation } from '@utils/animation';
 
 
 export default class BaseBlock {
@@ -13,7 +13,7 @@ export default class BaseBlock {
 
     popup() {
         this.instance.position.set(this.x, this.y + 30, this.z);
-        custom.to(this.instance.position, 0.5, { x: this.x, y: this.y, z: this.z, ease: 'Bounce.easeOut' });
+        customAnimation.to(this.instance.position, 0.5, { x: this.x, y: this.y, z: this.z, ease: 'Bounce.easeOut' });
     }
 
     _shrink() {
@@ -33,8 +33,8 @@ export default class BaseBlock {
     rebound() {
         this.status = STATUS.STOP;
         this.scale = 1;
-        custom.to(this.instance.scale, 0.5, { ease: 'Elastic.easeOut', y: 1 });
-        custom.to(this.instance.position, 0.5, { ease: 'Elastic.easeOut', y: 0 });
+        customAnimation.to(this.instance.scale, 0.5, { ease: 'Elastic.easeOut', y: 1 });
+        customAnimation.to(this.instance.position, 0.5, { ease: 'Elastic.easeOut', y: 0 });
     }
 
     shrink() {

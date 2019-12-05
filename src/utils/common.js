@@ -31,6 +31,9 @@ export const STATUS = {
     "STOP": "stop",
     "SKRINK": "shrink",
     "JUMP": "jump",
+    "FORERAKE":"forerake",
+    "HYPSOKINESIS":"hypsokinesis",
+    "FALL":"fall"
 }
 
 export const COLOR = [0x329ffc, 0x9fcf1f, 0xf44f3c, 0xffcf00]

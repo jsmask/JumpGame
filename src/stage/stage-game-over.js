@@ -15,12 +15,6 @@ export default class StageGameOver {
     }
     render() {
         const { width, height, aspect } = common;
-        this.region = [
-            (width - 200) / 2,
-            (width - 200) / 2 + 200,
-            (height - 200) / 2,
-            (height - 200) / 2 + 100
-        ]
         const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
@@ -70,11 +64,6 @@ export default class StageGameOver {
     onTouchEnd(e) {
         if (!this.mesh.visible) return;
         this.callback.restartGame();
-        // const pageX = e.changedTouches[0].pageX;
-        // const pageY = e.changedTouches[0].pageY;
-        // if (pageX > this.region[0] && pageX < this.region[1] && pageY > this.region[2] && pageY < this.region[3]) {
-        //     this.callback.restartGame();
-        // }
     }
 
     addTouchEvent = e => {

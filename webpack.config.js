@@ -10,7 +10,7 @@ const commonConfig = {
     output: {
         path: path.resolve(__dirname, "./dist"),
         chunkFilename: '[name].bundle.js',
-        filename: chunkData => chunkData.chunk.name === 'main' ? '[name].[chunkhash:12].js' : '[name].js'
+        filename: chunkData => chunkData.chunk.name === 'main' ? '[name].[chunkhash:12].js' : '[name].js',
     },
     resolve: {
         alias: {
@@ -34,6 +34,7 @@ const commonConfig = {
         port: 8085,
         open: false
     },
+    
     module: {
         rules: [{
             test: /\.(mp3|mp4|ogg)$/,
@@ -88,7 +89,6 @@ const commonConfig = {
         }
     },
 }
-
 
 
 module.exports = commonConfig;
