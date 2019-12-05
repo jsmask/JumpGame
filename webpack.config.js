@@ -24,7 +24,8 @@ const commonConfig = {
             "@utils": "@src/utils",
             "@scene": "@src/scene",
             "@block": "@src/block",
-            "@part": "@src/part"
+            "@part": "@src/part",
+            "@audio": "@/public/audio"
         }
     },
     devtool: "cheap-module-eval-source-map",
@@ -35,6 +36,11 @@ const commonConfig = {
     },
     module: {
         rules: [{
+            test: /\.(mp3|mp4|ogg)$/,
+            use: {
+                loader: "file-loader"
+            }
+        }, {
             test: /\.(jpe?g|gif|svg|png)$/,
             use: {
                 loader: "file-loader"

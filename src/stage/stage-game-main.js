@@ -6,6 +6,7 @@ import bottle from '@part/bottle';
 import { common, BLOCKCONFIG, BLOCKTYPE } from '@utils/common';
 import utils from '@utils'
 import ScoreText from '@part/scoreText'
+import audiomanager from '../audiomanager';
 
 
 
@@ -23,11 +24,14 @@ export default class StageGameMain {
         this.bottle = bottle;
         this.gravity = common.gravity;
         this.scoreText = new ScoreText();
+        
 
         this.scoreText.init();
         this.scene.init();
         this.ground.init();
         this.bottle.init();
+
+        audiomanager.init();
 
         this.addGround();
         this.addInitBlock();
@@ -38,6 +42,7 @@ export default class StageGameMain {
     restart() {
         console.log('restart Game');
         this.score = 0;
+        this.state = '';
         this.deleteObjectsFromScene();
         this.scene.reset();
         this.bottle.reset();
@@ -45,13 +50,12 @@ export default class StageGameMain {
         this.updateScore(0);
         this.addInitBlock();
         this.addGround();
-        this.addBottle();
-        this.state = '';
+        this.addBottle(); 
     }
     addInitBlock() {
         const scene = this.scene.instance;
         this.currentBlock = new CuboidBlock(-15, 0, 0);
-        this.nextBlock = new CylinderBlock(18 + (Math.random() * 5), 0, 0);
+        this.nextBlock = new CylinderBlock(23, 0, 0);
 
         scene.add(this.currentBlock.instance);
         scene.add(this.nextBlock.instance);
@@ -73,11 +77,13 @@ export default class StageGameMain {
     }
     addBottle() {
         const scene = this.scene.instance;
+        audiomanager.startPlay();
         scene.add(this.bottle.instance);
-        this.bottle.show().then(() => {
+        this.bottle.show().then(() => {  
             this.addTouchEvent();
             this.state = 'stop';
             console.log('show end');
+            
         });
     }
     addTouchEvent() {
@@ -92,7 +98,7 @@ export default class StageGameMain {
         console.log('touch start');
         if (this.state !== 'stop') return;
         this.touchStartTime = Date.now();
-
+        audiomanager.shrinkPlay();
         this.bottle.shrink();
         this.currentBlock.shrink();
     }
@@ -100,19 +106,20 @@ export default class StageGameMain {
         console.log('touch end');
         if (this.state !== 'stop') return;
         if (this.touchStartTime === 0) return;
+        audiomanager.shrinkStop();
         this.touchEndTime = Date.now();
         const duration = this.touchEndTime - this.touchStartTime;
         this.touchStartTime = 0;
-        this.bottle.velocity.vx = Math.min(duration / 6, 400);
+        this.bottle.velocity.vx = Math.min(duration / 6, 120);
         this.bottle.velocity.vx = +this.bottle.velocity.vx.toFixed(2);
-        this.bottle.velocity.vy = Math.min(150 + duration / 20, 400);
+        this.bottle.velocity.vy = Math.min(150 + duration / 30, 300);
         this.bottle.velocity.vy = +this.bottle.velocity.vy.toFixed(2);
         this.state = "jump";
         this.hit = this.getHitStatus(this.bottle, this.currentBlock, this.nextBlock, BLOCKCONFIG.height / 2 - (1 - this.currentBlock.instance.scale.y) * BLOCKCONFIG.height)
         this.checkingHit = true
         this.currentBlock.rebound();
         this.bottle.rotate();
-        this.bottle.jump();
+        this.bottle.jump();        
     }
 
     setDirection(direction) {
