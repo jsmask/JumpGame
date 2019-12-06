@@ -226,7 +226,7 @@ export default class StageGameMain {
                 this.removeTouchEvent();
                 setTimeout(() => {
                     this.callback.showGameOverStage();
-                }, 2000);
+                }, 1500);
             }
         }
     }

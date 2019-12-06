@@ -194,7 +194,7 @@ class Bottle {
 
     forerake() {
         this.status = STATUS.FORERAKE;
-        this.instance.position.y = BLOCKCONFIG.height / 2;
+        this.instance.position.y = BLOCKCONFIG.height/2;
         setTimeout(() => {
             if (this.direction === 0) {
                 customAnimation.to(this.instance.rotation, .5, { z: -Math.PI / 2 });
@@ -203,14 +203,14 @@ class Bottle {
                 customAnimation.to(this.instance.rotation, .5, { x: -Math.PI / 2 });
             }
             setTimeout(() => {
-                customAnimation.to(this.instance.position, 0.2, { y: -BLOCKCONFIG.height / 2 + 1.2 });
+                customAnimation.to(this.instance.position, 0.2, { y: -BLOCKCONFIG.height / 2 + 2 });
             }, 350);
         }, 200);
     }
 
     hypsokinesis() {
         this.status = STATUS.HYPSOKINESIS;
-        this.instance.position.y = BLOCKCONFIG.height / 2;
+        this.instance.position.y = BLOCKCONFIG.height/2;
         setTimeout(() => {
             if (this.direction === 0) {
                 customAnimation.to(this.instance.rotation, .5, { z: Math.PI / 2 });
@@ -219,7 +219,7 @@ class Bottle {
                 customAnimation.to(this.instance.rotation, .5, { x: Math.PI / 2 });
             }
             setTimeout(() => {
-                customAnimation.to(this.instance.position, 0.2, { y: -BLOCKCONFIG.height / 2 + 1.2 });
+                customAnimation.to(this.instance.position, 0.2, { y: -BLOCKCONFIG.height / 2 + 2 });
             }, 150);
         }, 200);
     }
@@ -227,7 +227,7 @@ class Bottle {
     fall() {
         this.status = STATUS.FALL;
         console.log('fall')
-        customAnimation.to(this.instance.position, 0.2, { y: -BLOCKCONFIG.height / 2 + 1.2 });
+        customAnimation.to(this.instance.position, 0.2, { y: -BLOCKCONFIG.height / 2 });
     }
 
     update() {

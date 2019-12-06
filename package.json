@@ -2,7 +2,7 @@
   "name": "jump_game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "build": "npx webpack --mode production",
     "start": "webpack-dev-server --mode development",

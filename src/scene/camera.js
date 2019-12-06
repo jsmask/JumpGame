@@ -16,7 +16,7 @@ class Camera {
     }
     reset() {
         //-10,10,10
-        this.instance.position.set(-10, 10, 10);
+        this.instance.position.set(-0, 0, 10);
         this.target = new THREE.Vector3(0, 0, 0);
     }
     updatePosition(newTargetPosition) {

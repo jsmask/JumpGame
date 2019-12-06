@@ -34,17 +34,25 @@ const commonConfig = {
         port: 8085,
         open: false
     },
-    
+
     module: {
         rules: [{
             test: /\.(mp3|mp4|ogg)$/,
             use: {
-                loader: "file-loader"
+                loader: "file-loader",
+                options: {
+                    name: "[name].[hash:8].[ext]",
+                    outputPath: "audio/"
+                }
             }
         }, {
             test: /\.(jpe?g|gif|svg|png)$/,
             use: {
-                loader: "file-loader"
+                loader: "file-loader",
+                options: {
+                    name: "[name].[hash:8].[ext]",
+                    outputPath: "images/"
+                }
             }
         }, {
             test: /\.css$/,
