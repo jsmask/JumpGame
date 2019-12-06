@@ -1,9 +1,9 @@
 # 仿写微信跳一跳[H5]
 
-引擎：three.js
-语言：javasrcipt
-介绍：仿制微信跳一跳的网页版，借鉴慕课千迦的动画库、物理库和MVC模式，简单的实现了跳一跳的基本核心功能
-展示：https://jsmask.github.io/jump-game/index.html
+### 引擎：three.js
+### 语言：javasrcipt
+### 介绍：仿制微信跳一跳的网页版，借鉴慕课千迦的动画库、物理库和MVC模式，简单的实现了跳一跳的基本核心功能
+### 展示：https://jsmask.github.io/jump-game/index.html
 
 ![Image](http://pic.yupoo.com/jsmask/2902398a/8aaa3939.png)
 
