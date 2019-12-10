@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const commonConfig = {
     entry: {
-        // three: './node_modules/three/build/three.min.js',
+        three: './public/three.js',
         main: './app.js'
     },
     output: {

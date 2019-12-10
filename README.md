@@ -8,7 +8,7 @@
 
 展示：https://jsmask.github.io/jump-game/index.html
 
-![Image](http://pic.yupoo.com/jsmask/2902398a/8aaa3939.png)
+![Image Game](http://pic.yupoo.com/jsmask/30c23976/f719fa06.png)
 
 ## Project setup
 ```
