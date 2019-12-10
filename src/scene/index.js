@@ -8,7 +8,6 @@ class Scene {
 
     constructor() {
         this.instance = null;
-
     }
 
     init() {
@@ -24,7 +23,6 @@ class Scene {
         // this.renderer.setClearColor(new THREE.Color(0xffffff));
         this.renderer.setSize(width, height);
 
-
         this.instance = new THREE.Scene();
 
         this.camera = camera;
@@ -33,7 +31,7 @@ class Scene {
         this.light = light;
         this.light.init();
 
-        this.axesHelper = new THREE.AxesHelper(100);
+        // this.axesHelper = new THREE.AxesHelper(100);
         // this.instance.add(this.axesHelper);
 
         this.instance.add(this.camera.instance);
@@ -69,7 +67,7 @@ class Scene {
         this.currentScore = scoreInstance;
         this.camera.instance.add(scoreInstance);
         scoreInstance.position.x = -24;
-        scoreInstance.position.y = 42;
+        scoreInstance.position.y = 40;
       }
     
       updateScore (scoreInstance) {
@@ -77,7 +75,7 @@ class Scene {
         this.currentScore = scoreInstance;
         this.camera.instance.add(scoreInstance);
         scoreInstance.position.x = -24;
-        scoreInstance.position.y = 42;
+        scoreInstance.position.y = 40;
       }
 
 }

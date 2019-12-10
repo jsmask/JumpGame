@@ -8,7 +8,6 @@ import utils from '@utils'
 import ScoreText from '@part/scoreText'
 import audiomanager from '../audiomanager';
 import { stopAllAnimation } from '@utils/animation';
-import { BOTTLECONFIG } from '@utils/common';
 
 const HIT_NEXT_BLOCK_NORMAL = 1;
 const HIT_BLOCK_CURRENT = 2;
@@ -273,22 +272,22 @@ export default class StageGameMain {
     }
 
     updateNextBlock() {
-        const seed = Math.round(Math.random())
+        const seed = Math.round(Math.random());
         const type = seed ? 'cuboid' : 'cylinder'
-        const direction = Math.round(Math.random()) // 0 -> x 1 -> z
+        const direction = Math.round(Math.random());
         const width = Math.round(Math.random() * 6) + 10;
         const distance = Math.round(Math.random() * 25) + 20;
         this.currentBlock = this.nextBlock
         const targetPosition = this.targetPosition = {}
         if (direction === 0) {
-            targetPosition.x = this.currentBlock.instance.position.x + distance
-            targetPosition.y = this.currentBlock.instance.position.y
-            targetPosition.z = this.currentBlock.instance.position.z
+            targetPosition.x = this.currentBlock.instance.position.x + distance;
+            targetPosition.y = this.currentBlock.instance.position.y;
+            targetPosition.z = this.currentBlock.instance.position.z;
         }
         if (direction === 1) {
-            targetPosition.x = this.currentBlock.instance.position.x
-            targetPosition.y = this.currentBlock.instance.position.y
-            targetPosition.z = this.currentBlock.instance.position.z - distance
+            targetPosition.x = this.currentBlock.instance.position.x;
+            targetPosition.y = this.currentBlock.instance.position.y;
+            targetPosition.z = this.currentBlock.instance.position.z - distance;
         }
         this.setDirection(direction)
         if (type === BLOCKTYPE.CUBOID) {

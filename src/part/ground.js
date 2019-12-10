@@ -14,13 +14,13 @@ class Ground {
 
         this.instance = new THREE.Mesh(geometry, material);
         this.instance.rotation.x = -Math.PI / 2;
-        this.instance.position.y = - 5.8;
+        this.instance.position.y = - 6;
         this.instance.receiveShadow = true;
     }
 
     reset(){
         this.instance.rotation.x = -Math.PI / 2;
-        this.instance.position.y = - 5.8;
+        this.instance.position.y = - 6;
         this.instance.position.x = 0;
         this.instance.position.z = 0;
     }
